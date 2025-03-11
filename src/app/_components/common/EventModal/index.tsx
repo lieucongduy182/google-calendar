@@ -168,10 +168,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
   if (!isOpen) return null;
 
   return (
-    <Modal open={isOpen} onClose={onClose} className="w-500">
+    <Modal open={isOpen} onClose={onClose} className="w-full">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md  overflow-auto max-h-screen h-fit">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-medium">
                 {selectedEvent ? 'Edit Event' : 'Add Event'}
