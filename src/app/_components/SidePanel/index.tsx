@@ -4,7 +4,6 @@ import { memo, useMemo } from 'react';
 import SmallCalendar from '@/app/_components/SidePanel/SmallCalendar';
 import EventList from '@/app/_components/SidePanel/EventList';
 import { useMonthCalendar } from '@/app/_hooks/useMonthCalendar';
-import clsx from 'clsx';
 import { useEventStore } from '@/lib/stores/eventStore';
 import { useSelectedDayStore } from '@/lib/stores/selectedDayStore';
 import dayjs from 'dayjs';
@@ -33,7 +32,7 @@ function SidePanel() {
     [selectedDay, events]
   );
   return (
-    <section className={clsx('bg-white rounded-xl block h-fit')}>
+    <section className="bg-white rounded-xl block h-fit md:max-w-fit w-full">
       <SmallCalendar
         currentMonth={currentMonth}
         currentMonthIndex={monthIndex}

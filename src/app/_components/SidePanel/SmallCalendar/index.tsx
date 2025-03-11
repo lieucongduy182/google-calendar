@@ -19,11 +19,13 @@ function SmallCalendar({
   handleForwardMonth,
   handlePrevMonth,
 }: SmallCalendarProps) {
-  //   const isContentVisible = useSelector((state) => state.modal.isContentVisible);
   const { selectedDay, setSelectedDay } = useSelectedDayStore();
-  const handleSelectedDay = useCallback((day: Dayjs) => {
-    setSelectedDay(day);
-  }, [setSelectedDay]);
+  const handleSelectedDay = useCallback(
+    (day: Dayjs) => {
+      setSelectedDay(day);
+    },
+    [setSelectedDay]
+  );
 
   return (
     <section className="p-5">

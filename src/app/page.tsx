@@ -13,7 +13,7 @@ export default function Home() {
     <section className="min-h-screen w-full p-4 sm:p-10">
       <div className="md:flex md:flex-row md:gap-4">
         <SidePanel />
-        <div className="hidden md:block">
+        <div className="hidden md:block w-full">
           <MonthView />
         </div>
       </div>
