@@ -39,3 +39,14 @@ export const EVENT_TYPE = {
   APPOINTMENT: 'Appointment',
   EVENT: 'Event',
 };
+
+export const RECURRING_TYPE = {
+  SINGLE: 'single',
+  RECURRING: 'recurring',
+};
+
+export const RECURRING_VALUE = {
+  DAILY: 'daily',
+  WEEKLY: 'weekly',
+  MONTHLY: 'monthly',
+};

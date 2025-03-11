@@ -5,6 +5,17 @@ export enum EventType {
   Event = 'Event',
 }
 
+export enum RecurringValue {
+  Daily = 'daily',
+  Weekly = 'weekly',
+  Monthly = 'monthly',
+}
+
+export enum RecurringType {
+  Single = 'single',
+  Recurring = 'recurring',
+}
+
 export type Event = {
   id: string;
   title: string;
@@ -18,8 +29,12 @@ export type Event = {
     border: string;
   };
   type: EventType;
-  clientName?: string
-  clientEmail?: string
+  clientName?: string;
+  clientEmail?: string;
+  recurringType: RecurringType;
+  recurringValue: RecurringValue | string;
+  recurringGroupId: string;
+  recurringTimes: number;
 };
 
 type EventState = {
@@ -29,7 +44,8 @@ type EventState = {
 };
 
 type EventActions = {
-  createEvent: (event: Omit<Event, 'id'>) => void;
+  createEvent: (event: Omit<Event, 'id'>) => Event;
+  createEvents: (events: Omit<Event, 'id'>[]) => void;
   updateEvent: (updatedEvent: Event) => void;
   deleteEvent: (eventId: string) => void;
 
@@ -44,6 +60,18 @@ export const useEventStore = createStore<EventStore>(
   (set) => ({
     events: [],
     selectedEvent: null,
+    createEvents: (eventsData) => {
+      const newEvents = eventsData.map((eventData) => ({
+        ...eventData,
+        id: generateId(),
+      }));
+
+      set((state) => ({
+        events: [...state.events, ...newEvents],
+      }));
+
+      return newEvents;
+    },
     createEvent: (eventData) => {
       const newEvent: Event = {
         ...eventData,

@@ -17,8 +17,19 @@ import {
   SelectChangeEvent,
   TextField,
 } from '@mui/material';
-import { Event, EventType, useEventStore } from '@/lib/stores/eventStore';
-import { DATE_TIME_FORMAT, TIME_FORMAT, labelClasses } from '@/app/constants';
+import {
+  Event,
+  EventType,
+  RecurringType,
+  useEventStore,
+} from '@/lib/stores/eventStore';
+import {
+  DATE_TIME_FORMAT,
+  RECURRING_TYPE,
+  RECURRING_VALUE,
+  TIME_FORMAT,
+  labelClasses,
+} from '@/app/constants';
 
 type AddEventModalProps = {
   isOpen: boolean;
@@ -29,6 +40,7 @@ type AddEventModalProps = {
 function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
   const selectedEvent = useEventStore((state) => state.selectedEvent);
   const createEvent = useEventStore((state) => state.createEvent);
+  const createEvents = useEventStore((state) => state.createEvents);
   const updateEvent = useEventStore((state) => state.updateEvent);
   const selectedEventDayClone = useMemo(
     () => (selectedDay ? dayjs(selectedDay) : dayjs()),
@@ -46,6 +58,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
       type: 'Event' as EventType,
       clientName: '',
       clientEmail: '',
+      recurringType: RECURRING_TYPE.SINGLE as RecurringType,
+      recurringValue: '',
+      recurringGroupId: '',
+      recurringTimes: 0,
     }),
     [selectedEventDayClone]
   );
@@ -57,10 +73,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
   };
 
   const handleTypeChange = (e: SelectChangeEvent) => {
-    const { value } = e.target;
+    const { value, name } = e.target;
     setFormData((prev) => ({
       ...prev,
-      type: value as EventType,
+      [name]: value as EventType,
     }));
   };
 
@@ -133,6 +149,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
       type: formData.type,
       clientName: formData.clientName,
       clientEmail: formData.clientEmail,
+      recurringType: formData.recurringType as RecurringType,
+      recurringValue: formData.recurringValue,
+      recurringGroupId: formData.recurringGroupId,
+      recurringTimes: formData.recurringTimes,
     };
 
     if (selectedEvent) {
@@ -141,9 +161,59 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
         id: selectedEvent.id,
       });
     } else {
-      createEvent(formattedEventData);
+      if (formData.recurringType === RECURRING_TYPE.SINGLE) {
+        createEvent(formattedEventData);
+      } else if (formData.recurringType === RECURRING_TYPE.RECURRING) {
+        const firstEvent = {
+          ...formattedEventData,
+          date: formData.date.format(DATE_TIME_FORMAT),
+        };
+        switch (formData.recurringValue) {
+          case RECURRING_VALUE.DAILY: {
+            const { id } = createEvent(firstEvent);
+            const events = [];
+            for (let i = 1; i < formData.recurringTimes; i++) {
+              const newDate = formData.date.add(i, 'day');
+              events.push({
+                ...formattedEventData,
+                date: newDate.format(DATE_TIME_FORMAT),
+                recurringGroupId: id,
+              });
+            }
+            createEvents(events);
+            break;
+          }
+          case RECURRING_VALUE.WEEKLY: {
+            const { id } = createEvent(firstEvent);
+            const weekEvents = [];
+            for (let i = 1; i < formData.recurringTimes; i++) {
+              const newDate = formData.date.add(i, 'week');
+              weekEvents.push({
+                ...formattedEventData,
+                date: newDate.format(DATE_TIME_FORMAT),
+                recurringGroupId: id,
+              });
+            }
+            createEvents(weekEvents);
+            break;
+          }
+          case RECURRING_VALUE.MONTHLY: {
+            const { id } = createEvent(firstEvent);
+            const monthEvents = [];
+            for (let i = 1; i < formData.recurringTimes; i++) {
+              const newDate = formData.date.add(i, 'month');
+              monthEvents.push({
+                ...formattedEventData,
+                date: newDate.format(DATE_TIME_FORMAT),
+                recurringGroupId: id,
+              });
+            }
+            createEvents(monthEvents);
+            break;
+          }
+        }
+      }
     }
-
     onClose();
   };
 
@@ -159,6 +229,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
         type: selectedEvent.type,
         clientName: selectedEvent.clientName || '',
         clientEmail: selectedEvent.clientEmail || '',
+        recurringType: selectedEvent.recurringType,
+        recurringValue: selectedEvent.recurringValue || '',
+        recurringGroupId: selectedEvent.recurringGroupId || '',
+        recurringTimes: selectedEvent.recurringTimes,
       });
     } else {
       setFormData(initialFormData);
@@ -166,6 +240,9 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
   }, [selectedEvent, initialFormData]);
 
   if (!isOpen) return null;
+
+  const isSelectRecurringEvent = formData.recurringType === 'recurring';
+  const isEditingEvent = !!selectedEvent;
 
   return (
     <Modal open={isOpen} onClose={onClose} className="w-full">
@@ -209,6 +286,7 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
                       name="type"
                       onChange={handleTypeChange}
                       label="Type"
+                      readOnly={isEditingEvent}
                     >
                       <MenuItem value="Event">Event</MenuItem>
                       <MenuItem value="Appointment">Appointment</MenuItem>
@@ -216,6 +294,56 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
                   </FormControl>
                 </div>
 
+                <div className="mb-4">
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel>Recurring Type</InputLabel>
+                    <Select
+                      value={formData.recurringType}
+                      name="recurringType"
+                      onChange={handleTypeChange}
+                      label="Type"
+                      readOnly={isEditingEvent}
+                    >
+                      <MenuItem value="single">Normal event</MenuItem>
+                      <MenuItem value="recurring">Recurring</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                {isSelectRecurringEvent && (
+                  <>
+                    <div className="mb-4">
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel>Repeat Type</InputLabel>
+                        <Select
+                          value={formData.recurringValue || ''}
+                          name="recurringValue"
+                          onChange={handleTypeChange}
+                          label="Type"
+                          readOnly={isEditingEvent}
+                        >
+                          <MenuItem value="daily">daily</MenuItem>
+                          <MenuItem value="weekly">weekly</MenuItem>
+                          <MenuItem value="monthly">monthly</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </div>
+
+                    <div className="p-2 flex gap-2 items-center">
+                      <InputLabel>Repeat Times</InputLabel>
+                      <input
+                        className="p-2 border border-gray-400 rounded w-200"
+                        type="number"
+                        name="recurringTimes"
+                        value={formData.recurringTimes}
+                        onChange={handleInputChange}
+                        placeholder="Repeat time"
+                        min={1}
+                        required={formData.recurringTimes > 1}
+                        readOnly={isEditingEvent}
+                      />
+                    </div>
+                  </>
+                )}
                 {formData.type === 'Appointment' && (
                   <div className="space-y-4">
                     <TextField
