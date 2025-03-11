@@ -30,7 +30,7 @@ function MonthView() {
   const handleSelectedDay = useCallback((day: Dayjs) => {
     setSelectedDay(day);
     openNewEventModal();
-  }, []);
+  }, [setSelectedDay, openNewEventModal]);
 
   return (
     <section className={'p-5 w-full bg-white rounded-xl block'}>

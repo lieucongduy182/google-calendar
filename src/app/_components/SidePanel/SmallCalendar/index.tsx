@@ -23,7 +23,7 @@ function SmallCalendar({
   const { selectedDay, setSelectedDay } = useSelectedDayStore();
   const handleSelectedDay = useCallback((day: Dayjs) => {
     setSelectedDay(day);
-  }, []);
+  }, [setSelectedDay]);
 
   return (
     <section className="p-5">

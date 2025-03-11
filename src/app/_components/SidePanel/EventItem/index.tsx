@@ -20,7 +20,7 @@ const EventItem = ({ event }: EventItemProps) => {
     if (!event) return;
     setSelectedEvent(event);
     setShowEventModal(true);
-  }, []);
+  }, [setSelectedEvent, setShowEventModal]);
 
   const {
     isOpen: isOpenDrawer,

@@ -14,6 +14,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
 } from '@mui/material';
 import { Event, EventType, useEventStore } from '@/lib/stores/eventStore';
@@ -55,8 +56,8 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleTypeChange = (e: any) => {
-      const { value } = e.target as HTMLInputElement;
+  const handleTypeChange = (e: SelectChangeEvent) => {
+    const { value } = e.target;
     setFormData((prev) => ({
       ...prev,
       type: value as EventType,

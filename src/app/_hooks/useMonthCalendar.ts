@@ -23,15 +23,15 @@ export const useMonthCalendar = () => {
 
   const handlePrevMonth = useCallback(() => {
     setMonthIndex(monthIndex - 1);
-  }, [monthIndex]);
+  }, [setMonthIndex, monthIndex]);
 
   const handleForwardMonth = useCallback(() => {
     setMonthIndex(monthIndex + 1);
-  }, [monthIndex]);
+  }, [setMonthIndex, monthIndex]);
 
   const handleResetToday = useCallback(() => {
     setMonthIndex(dayjs().month());
-  }, []);
+  }, [setMonthIndex]);
 
   useEffect(() => {
     setCurrentMonth(getMonth(monthIndex));
