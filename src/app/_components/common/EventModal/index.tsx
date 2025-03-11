@@ -55,8 +55,8 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleTypeChange = (e: React.SyntheticEvent) => {
-    const { value } = e.target as HTMLInputElement;
+  const handleTypeChange = (e: any) => {
+      const { value } = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       type: value as EventType,
