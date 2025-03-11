@@ -56,7 +56,6 @@ function DayButtonLarge({
             'w-10 h-10 mt-2 text-md rounded-full text-center flex items-center justify-center',
             !isCurrent && 'text-gray-400',
             isToday && 'bg-light-blue text-white'
-            // isSelectedDay && 'bg-dark-blue text-white'
           )}
           disabled={!isCurrent}
         >
