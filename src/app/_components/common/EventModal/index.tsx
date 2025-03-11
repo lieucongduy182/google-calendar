@@ -312,15 +312,17 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
 
               <div className="flex justify-end mt-6 space-x-2">
                 <Button
+                  variant="outlined"
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none"
                 >
                   Cancel
                 </Button>
                 <Button
+                  variant="contained"
                   type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md hover:bg-blue-700 focus:outline-none"
                 >
                   {selectedEvent ? 'Update' : 'Save'}
                 </Button>
