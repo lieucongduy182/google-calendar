@@ -23,7 +23,7 @@ const DayButton = ({
     dayjs(selectedDay).format(DATE_TIME_FORMAT) ===
       date.format(DATE_TIME_FORMAT);
   const isCurrent =
-    date.month() === currentMonthIndex % 12 && date.year() === dayjs().year();
+    date.month() === currentMonthIndex % 12;
 
   return (
     <button
