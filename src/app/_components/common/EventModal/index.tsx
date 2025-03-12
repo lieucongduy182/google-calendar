@@ -158,6 +158,7 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
       labelClass: {
         bg: labelClasses[formData.selectedLabel].bg,
         border: labelClasses[formData.selectedLabel].border,
+        text: labelClasses[formData.selectedLabel].text,
       },
       selectedLabel: formData.selectedLabel,
       type: formData.type,

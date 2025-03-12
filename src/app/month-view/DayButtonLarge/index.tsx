@@ -35,7 +35,7 @@ function DayButtonLarge({
   const showEventBackground = useMemo(() => {
     if (!isHasEvents) return '';
 
-    return isToday ? 'bg-light-blue' : 'bg-light-orange';
+    return isToday ? 'bg-blue-300' : 'bg-light-orange';
   }, [isHasEvents, isToday]);
 
   return (

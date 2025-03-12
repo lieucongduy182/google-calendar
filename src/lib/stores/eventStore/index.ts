@@ -27,6 +27,7 @@ export type Event = {
   labelClass: {
     bg: string;
     border: string;
+    text: string;
   };
   type: EventType;
   clientName?: string;

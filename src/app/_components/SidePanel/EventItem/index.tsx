@@ -13,14 +13,18 @@ type EventItemProps = {
 };
 
 const EventItem = ({ event }: EventItemProps) => {
+  console.log('🚀  [Debug] ~ EventItem ~ event:', event);
   const formattedPeriodTime = formatPeriodTime(event.startTime, event.endTime);
   const isAppointment = event.type === EVENT_TYPE.APPOINTMENT;
   const { setSelectedEvent, setShowEventModal } = useEventStore();
-  const handleEditEvent = useCallback((event: Event) => {
-    if (!event) return;
-    setSelectedEvent(event);
-    setShowEventModal(true);
-  }, [setSelectedEvent, setShowEventModal]);
+  const handleEditEvent = useCallback(
+    (event: Event) => {
+      if (!event) return;
+      setSelectedEvent(event);
+      setShowEventModal(true);
+    },
+    [setSelectedEvent, setShowEventModal]
+  );
 
   const {
     isOpen: isOpenDrawer,
@@ -36,7 +40,9 @@ const EventItem = ({ event }: EventItemProps) => {
       )}
     >
       <div className="flex flex-col justify-center text-xs gap-1 min-w-40">
-        <p className="text-white font-semibold text-wrap">{event.title}</p>
+        <p className={clsx('font-semibold text-wrap', event.labelClass.text)}>
+          {event.title}
+        </p>
         <p className="text-white font-thin">{formattedPeriodTime}</p>
         {isAppointment && (
           <div className="flex items-center gap-2 mt-2">

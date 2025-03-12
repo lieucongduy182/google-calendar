@@ -6,32 +6,28 @@ export const DAYS_OF_WEEK = 7;
 
 export const labelClasses = [
   {
-    bg: 'bg-light-orange',
+    bg: 'bg-light-blue',
     border: 'border-dark-blue',
+    text: 'text-gray-800',
+    hoverBg: 'hover:bg-blue-100',
   },
   {
-    bg: 'bg-yellow-500',
+    bg: 'bg-dark-blue',
     border: 'border-yellow-500',
+    text: 'text-white',
+    hoverBg: 'hover:bg-blue-700',
   },
   {
-    bg: 'bg-green-500',
-    border: 'border-green-500',
-  },
-  {
-    bg: 'bg-blue-500',
+    bg: 'bg-dark-orange',
     border: 'border-blue-500',
+    text: 'text-white',
+    hoverBg: 'hover:bg-orange-700',
   },
   {
-    bg: 'bg-indigo-500',
-    border: 'border-indigo-500',
-  },
-  {
-    bg: 'bg-purple-500',
-    border: 'border-purple-500',
-  },
-  {
-    bg: 'bg-pink-500',
-    border: 'border-pink-500',
+    bg: 'bg-purple-200',
+    border: 'border-purple-600',
+    text: 'text-gray-800',
+    hoverBg: 'hover:bg-purple-300',
   },
 ];
 
