@@ -19,8 +19,7 @@ function DayButtonLarge({
   handleSelectedDay,
 }: DayButtonLargeProps) {
   const formattedDate = date.format(DATE_TIME_FORMAT);
-  const isCurrent =
-    date.month() === currentMonthIndex % 12 && date.year() === dayjs().year();
+  const isCurrent = date.month() === currentMonthIndex % 12;
   const isToday = formattedDate === dayjs().format(DATE_TIME_FORMAT);
 
   const renderEvents = useMemo(

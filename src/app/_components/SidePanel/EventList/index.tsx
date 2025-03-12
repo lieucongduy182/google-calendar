@@ -26,7 +26,11 @@ function EventList({ events }: EventListProps) {
     <div className="p-4">
       <div>
         <div className="flex items-center justify-between">
-          <p className="text-left text-dark-blue font-bold">Upcoming Events</p>
+          <p className="text-left text-dark-blue font-bold">
+            {dayjs(selectedDay).isBefore(dayjs(), 'day')
+              ? 'History Events'
+              : 'Upcoming Events'}
+          </p>
           <Link
             className="md:hidden px-2 py-2 text-xs bg-dark-blue text-white rounded-full"
             href="/month-view"

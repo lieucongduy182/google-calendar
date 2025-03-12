@@ -47,13 +47,21 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
     [selectedDay]
   );
 
-  const initialFormData = useMemo(
-    () => ({
+  const initialFormData = useMemo(() => {
+    const now = dayjs();
+    return {
       title: '',
       description: '',
-      date: selectedEventDayClone,
-      startTime: selectedEventDayClone,
-      endTime: selectedEventDayClone.add(1, 'hour'),
+      date: selectedEventDayClone.clone(),
+      startTime: selectedEventDayClone
+        .clone()
+        .hour(now.hour())
+        .minute(now.minute()),
+      endTime: selectedEventDayClone
+        .clone()
+        .hour(now.hour())
+        .minute(now.minute())
+        .add(1, 'hour'),
       selectedLabel: 0,
       type: 'Event' as EventType,
       clientName: '',
@@ -62,9 +70,8 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
       recurringValue: '',
       recurringGroupId: '',
       recurringTimes: 0,
-    }),
-    [selectedEventDayClone]
-  );
+    };
+  }, [selectedEventDayClone]);
   const [formData, setFormData] = useState(initialFormData);
 
   const handleInputChange = (e: React.SyntheticEvent) => {
@@ -104,7 +111,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
     if (!newDateTime) return;
     setFormData((prev) => {
       let newEndTime = prev.endTime;
-      if (newDateTime.isAfter(prev.endTime)) {
+      if (
+        newDateTime.isAfter(prev.endTime) ||
+        newDateTime.isSame(prev.endTime)
+      ) {
         newEndTime = newDateTime.add(1, 'hour');
       }
 
@@ -134,6 +144,10 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    if (formData.endTime.isBefore(formData.startTime)) {
+      return;
+    }
 
     const formattedEventData: Omit<Event, 'id'> = {
       title: formData.title,
@@ -272,9 +286,6 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
                     placeholder="Add title"
                     variant="standard"
                     required
-                    inputProps={{
-                      style: { fontSize: '1rem' },
-                    }}
                   />
                 </div>
 
@@ -296,15 +307,17 @@ function EventModal({ isOpen, selectedDay, onClose }: AddEventModalProps) {
 
                 <div className="mb-4">
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel>Recurring Type</InputLabel>
+                    <InputLabel id="recurringType">Recurring Type</InputLabel>
                     <Select
+                      labelId="recurringType"
+                      id="recurringType"
                       value={formData.recurringType}
                       name="recurringType"
                       onChange={handleTypeChange}
-                      label="Type"
+                      label="Recurring Type"
                       readOnly={isEditingEvent}
                     >
-                      <MenuItem value="single">Normal event</MenuItem>
+                      <MenuItem value="single">Single</MenuItem>
                       <MenuItem value="recurring">Recurring</MenuItem>
                     </Select>
                   </FormControl>
